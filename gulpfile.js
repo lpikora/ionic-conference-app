@@ -58,7 +58,7 @@ gulp.task('watch', ['clean'], function(done){
 });
 gulp.task('build', ['clean'], function(done){
   runSequence(
-    ['sass', 'html', 'fonts', 'scripts'],
+    ['sass', 'html', 'fonts', 'scripts', 'scripts-external', 'css-external'],
     function(){
       buildBrowserify({
         minify: isRelease,
