@@ -7,10 +7,11 @@ import {TabsPage} from './pages/tabs/tabs';
 import {LoginPage} from './pages/login/login';
 import {SignupPage} from './pages/signup/signup';
 import {TutorialPage} from './pages/tutorial/tutorial';
-
+import * as cons from 'ionic-debug-console/ionic-debug-console';
 
 @Component({
   templateUrl: 'build/app.html',
+  directives: [cons.ConsoleButtonComponent],
   queries: {
     nav: new ViewChild('content')
   }
@@ -18,14 +19,20 @@ import {TutorialPage} from './pages/tutorial/tutorial';
 class ConferenceApp {
   static get parameters() {
     return [
-      [Events], [ConferenceData], [UserData], [Platform], [MenuController]
+      [Events], [ConferenceData], [UserData], [Platform], [MenuController], [cons.ConsoleDataProvider]
     ]
   }
 
-  constructor(events, confData, userData, platform, menu) {
+  constructor(events, confData, userData, platform, menu, consoleDataProvider) {
     this.userData = userData;
     this.events = events;
     this.menu = menu;
+    this.consoleDataProvider = consoleDataProvider;
+
+    // Ionic Debug Console initialize
+    this.consoleDataProvider.init({apiUrl: 'http://localhost:3000/',
+                                    apiToken: '574a946146bab50828200f3e',
+                                    reporting: true});
 
     // Call any initial plugins when ready
     platform.ready().then(() => {
@@ -109,6 +116,10 @@ class ConferenceApp {
 // Set any config for your app as the third argument:
 // http://ionicframework.com/docs/v2/api/config/Config/
 
-ionicBootstrap(ConferenceApp, [ConferenceData, UserData], {
+ionicBootstrap(ConferenceApp, [ConferenceData, UserData,
+                               cons.ConfProvider,
+                               cons.ConsoleDataProvider,
+                               cons.AppConsoleService,
+                               cons.SystemInfoProvider], {
   tabbarPlacement: 'bottom'
 });
