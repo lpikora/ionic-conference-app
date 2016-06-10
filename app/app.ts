@@ -8,6 +8,7 @@ import {TabsPage} from './pages/tabs/tabs';
 import {LoginPage} from './pages/login/login';
 import {SignupPage} from './pages/signup/signup';
 import {TutorialPage} from './pages/tutorial/tutorial';
+import * as cons from 'ionic-debug-console/ionic-debug-console';
 
 interface PageObj {
   title: string;
@@ -17,7 +18,8 @@ interface PageObj {
 }
 
 @Component({
-  templateUrl: 'build/app.html'
+  templateUrl: 'build/app.html',
+  directives: [cons.ConsoleButtonComponent],
 })
 class ConferenceApp {
   // the root nav is a child of the root app component
@@ -47,9 +49,16 @@ class ConferenceApp {
     private events: Events,
     private userData: UserData,
     private menu: MenuController,
+    private consoleDataProvider: cons.ConsoleDataProvider,
     platform: Platform,
     confData: ConferenceData
   ) {
+
+    // initialize Ionic Debug Console
+    this.consoleDataProvider.init({apiUrl: 'http://localhost:3000/',
+                                apiToken: '574a946146bab50828200f3e',
+                                reporting: true});
+
     // Call any initial plugins when ready
     platform.ready().then(() => {
       StatusBar.styleDefault();
@@ -116,6 +125,12 @@ class ConferenceApp {
 // See the theming docs for the default values:
 // http://ionicframework.com/docs/v2/theming/platform-specific-styles/
 
-ionicBootstrap(ConferenceApp, [ConferenceData, UserData], {
-  tabbarPlacement: 'bottom'
-});
+ionicBootstrap(ConferenceApp,
+               [ConferenceData,
+                UserData,
+                cons.ConfProvider,
+                cons.ConsoleDataProvider,
+                cons.AppConsoleService,
+                cons.SystemInfoProvider],
+                {tabbarPlacement: 'bottom'}
+              );

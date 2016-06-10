@@ -18,6 +18,18 @@ gulp.task('build:before', ['build']);
 var shouldWatch = argv.indexOf('-l') > -1 || argv.indexOf('--livereload') > -1;
 gulp.task('run:before', [shouldWatch ? 'watch' : 'build']);
 
+// Ionic Console Debug copy external scripts and styles
+
+gulp.task('scripts-external', function() {
+    gulp.src('scripts/*.js')
+    .pipe(gulp.dest('www/build/js'));
+});
+
+gulp.task('css-external', function() {
+    gulp.src('styles/*.css')
+    .pipe(gulp.dest('www/build/css'));
+});
+
 /**
  * Ionic Gulp tasks, for more information on each see
  * https://github.com/driftyco/ionic-gulp-tasks
@@ -36,7 +48,7 @@ var isRelease = argv.indexOf('--release') > -1;
 
 gulp.task('watch', ['clean'], function(done){
   runSequence(
-    ['sass', 'html', 'fonts', 'scripts'],
+    ['sass', 'html', 'fonts', 'scripts', 'scripts-external', 'css-external'],
     function(){
       gulpWatch('app/**/*.scss', function(){ gulp.start('sass'); });
       gulpWatch('app/**/*.html', function(){ gulp.start('html'); });
